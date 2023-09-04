@@ -15,5 +15,6 @@
 			.Where(b => b.Title.Contains(query)
 			|| b.Author.Contains(query))
 			.ToArray();
+
 	}
 }
