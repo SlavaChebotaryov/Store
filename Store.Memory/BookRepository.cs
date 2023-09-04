@@ -9,6 +9,10 @@
 			new Book(3, "C Prog")
 		};
 
-		public Book[] GetAllByTitle(string titlePart) => books.Where(b => b.Title.Contains(titlePart, StringComparison.InvariantCultureIgnoreCase)).ToArray();
+		public Book[] GetAllByTitle(string titlePart)
+		{
+			
+			return books.Where(b => b.Title.Contains(titlePart??"", StringComparison.InvariantCultureIgnoreCase)).ToArray();
+		}
 	}
 }
