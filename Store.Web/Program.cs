@@ -1,3 +1,5 @@
+using Store.Memory;
+
 namespace Store.Web
 {
 	public class Program
@@ -5,9 +7,11 @@ namespace Store.Web
 		public static void Main(string[] args)
 		{
 			var builder = WebApplication.CreateBuilder(args);
-
+			var services = builder.Services;
 			// Add services to the container.
-			builder.Services.AddControllersWithViews();
+			services.AddControllersWithViews();
+			services.AddSingleton<IBookRepository, BookRepository>();
+
 
 			var app = builder.Build();
 

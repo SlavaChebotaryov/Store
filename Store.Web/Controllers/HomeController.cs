@@ -15,6 +15,7 @@ namespace Store.Web.Controllers
 
 		public IActionResult Index()
 		{
+			_logger.LogInformation("Удачный старт");
 			return View();
 		}
 

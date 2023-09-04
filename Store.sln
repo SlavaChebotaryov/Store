@@ -14,6 +14,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "presentation", "presentation", "{EB99D4E9-0744-4C67-B394-73F2BCCA6DB1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Store.Web", "Store.Web\Store.Web.csproj", "{3ED13E40-BF02-4139-AE55-4F752603FEDE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{417A0AE5-0C0D-411D-B433-34226B2383C9} = {417A0AE5-0C0D-411D-B433-34226B2383C9}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
