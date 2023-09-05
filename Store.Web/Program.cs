@@ -9,7 +9,16 @@ namespace Store.Web
 			var builder = WebApplication.CreateBuilder(args);
 			var services = builder.Services;
 
+			services.AddDistributedMemoryCache();
 			services.AddControllersWithViews();
+			services.AddSession(options =>
+			{
+				options.IdleTimeout = TimeSpan.FromMinutes(20); //Время сессии
+				options.Cookie.HttpOnly = true; //Обращение к кукам только из бэка
+				options.Cookie.IsEssential = true; //Обозначает что кука не обязана запрашивать согласие пользователя(тех кука)
+
+			});
+
 			services.AddSingleton<IBookRepository, BookRepository>();
 			services.AddSingleton<BookService>();
 
@@ -20,7 +29,6 @@ namespace Store.Web
 			if (!app.Environment.IsDevelopment())
 			{
 				app.UseExceptionHandler("/Home/Error");
-				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 				app.UseHsts();
 			}
 
@@ -30,6 +38,8 @@ namespace Store.Web
 			app.UseRouting();
 
 			app.UseAuthorization();
+
+			app.UseSession(); //Подключение сессии
 
 			app.MapControllerRoute(
 				name: "default",

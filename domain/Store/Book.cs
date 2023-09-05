@@ -14,7 +14,7 @@ public class Book
 	public Book(int id, string title, string author, string isbn, string description, decimal price)
 		=> (Id, Title, Author, Isbn, Description, Price) = (id, title, author, isbn, description, price);
 
-	internal static bool IsIsbn(string s)
+	internal static bool IsIsbn(string? s)
 	{
 		if (s == null)
 			return false;

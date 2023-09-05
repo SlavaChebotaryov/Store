@@ -5,7 +5,8 @@ namespace Store.Tests
 		[Fact]
 		public void IsIsbn_WithNull_ReturnFalse()
 		{
-			bool actual = Book.IsIsbn(null);
+			string? isbn = null;
+			bool actual = Book.IsIsbn(isbn);
 
 			Assert.False(actual);
 		}

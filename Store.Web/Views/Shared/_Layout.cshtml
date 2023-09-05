@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Store.Web.Views.Shared
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -11,10 +12,25 @@
     <header>
 	    <nav class="navbar navbar-expand-sm navbar-light bg-white">
 		    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Интернет-магазин книг</a>
-		    <form class="form-inline my-2 my-lg-0" action="@Url.Action("Index", "Search")" method="get">
+		    <form class="form-inline my-2 my-lg-1" action="@Url.Action("Index", "Search")" method="get">
 			    <input class="form-control mr-sm-2" type="search" name="query" placeholder="автор или название" />
 			    <button class="btn btn-primary my-2 my-sm-0" type="submit">Искать</button>
 		    </form>
+		    <span class="navbar-text ml-auto">
+                @{
+	                Cart cart;
+	                if (!Context.Session.TryGetCart(out cart))
+		                cart = new();
+	                if (cart.Items.Count == 0)
+	                {
+                        @:Корзина пуста
+	                }
+	                else
+	                {
+		                @:Товаров @cart.Items.Count на сумму @cart.Amount
+	                }
+                }
+		    </span>
         </nav>
     </header>
     <div class="container">
