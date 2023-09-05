@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Moq;
+﻿using Moq;
 
 namespace Store.Tests
 {
@@ -14,10 +9,10 @@ namespace Store.Tests
 		{
 			var bookRepositoryStub = new Mock<IBookRepository>();
 			bookRepositoryStub.Setup(x => x.GetAllByIsbn(It.IsAny<string>()))
-				.Returns(new[] { new Book(1, "", "", "") });
+				.Returns(new[] { new Book(1, "", "", "", "", 0m) });
 
 			bookRepositoryStub.Setup(x => x.GetAllByTitleOrAuthor(It.IsAny<string>()))
-				.Returns(new[] { new Book(2, "", "", "") });
+				.Returns(new[] { new Book(2, "", "", "", "", 0m) });
 			var bookService = new BookService(bookRepositoryStub.Object);
 			var validIsbn = "ISBN 12345-67890";
 
@@ -29,15 +24,15 @@ namespace Store.Tests
 		public void GetAllByQuery_WithAuthor_CallsGetAllByTitleOrAuthor()
 		{
 			var bookRepositoryStub = new Mock<IBookRepository>();
-			bookRepositoryStub.Setup(x => x.GetAllByIsbn(It.IsAny<string>()))
-				.Returns(new[] { new Book(1, "", "", "") });
+			bookRepositoryStub.Setup(x => x.GetAllByIsbn("Reach"))
+				.Returns(new[] { new Book(1, "", "", "", "", 0m) });
 
-			bookRepositoryStub.Setup(x => x.GetAllByTitleOrAuthor(It.IsAny<string>()))
-				.Returns(new[] { new Book(2, "", "", "") });
+			bookRepositoryStub.Setup(x => x.GetAllByTitleOrAuthor("Reach"))
+				.Returns(new[] { new Book(2, "", "", "", "", 0m) });
 			var bookService = new BookService(bookRepositoryStub.Object);
-			var invalidIsbn = "asdadssad";
+			var author = "Reach";
 
-			var actual = bookService.GetAllByQuery(invalidIsbn);
+			var actual = bookService.GetAllByQuery(author);
 
 			Assert.Collection(actual, book => Assert.Equal(2, book.Id));
 		}
