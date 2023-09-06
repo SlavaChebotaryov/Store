@@ -2,9 +2,10 @@
 {
 	public class Cart
 	{
-		public IDictionary<int, int> Items { get; set; } = new Dictionary<int, int>(); // <int><int> BookId Count
+		public int OrderId { get; }
+		public int TotalCount { get; set; }
+        public decimal TotalPrice { get; set; }
 
-		public decimal Amount { get; set; }
-
-	}
+        public Cart(int orderId) => (OrderId, TotalCount, TotalPrice) = (orderId, 0, 0m);
+    }
 }

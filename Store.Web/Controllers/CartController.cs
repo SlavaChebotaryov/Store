@@ -1,29 +1,38 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Humanizer;
+using Microsoft.AspNetCore.Mvc;
 using Store.Web.Models;
-using Store.Web.Views.Shared;
 
 namespace Store.Web.Controllers;
 
 public class CartController : Controller
 {
 	private readonly IBookRepository _bookRepository;
+    private readonly IOrderRepository _orderRepository;
 
-	public CartController(IBookRepository bookRepository) => _bookRepository = bookRepository;
+	public CartController(IBookRepository bookRepository,IOrderRepository orderRepository) => 
+        (_bookRepository, _orderRepository) = (bookRepository,orderRepository);
 
 	public IActionResult Add(int id)
 	{
-		var book = _bookRepository.GetById(id);
-		Cart cart;
-		if (!HttpContext.Session.TryGetCart(out cart))
-			cart = new Cart();
-
-		if (cart.Items.ContainsKey(id))
-			cart.Items[id]++;
-		else
-			cart.Items[id] = 1;
-
-		cart.Amount += book.Price;
 		
+
+        Order order;
+		Cart cart;
+        if (HttpContext.Session.TryGetCart(out cart))
+        {
+            order = _orderRepository.GetById(cart.OrderId);
+        }
+		else
+        {
+            order = _orderRepository.Create();
+            cart = new Cart(order.Id);
+        }
+        var book = _bookRepository.GetById(id);
+        order.AddItem(book,1);
+        _orderRepository.Update(order);
+
+        cart.TotalCount = order.TotalCount;
+        cart.TotalPrice = order.TotalPrice;
 
 		HttpContext.Session.Set(cart);
 

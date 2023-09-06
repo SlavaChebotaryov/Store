@@ -1,56 +1,48 @@
-﻿using System.Configuration;
-using System.Text;
+﻿using System.Text;
+using Microsoft.Extensions.Options;
 using Store.Web.Models;
 
-namespace Store.Web.Views.Shared
+namespace Store.Web.Controllers
 {
-	public static class SessionExtensions
-	{
-		private const string key = "Cart";
-		public static void Set(this ISession session, Cart value)
-		{
-			if (value == null)
-				return;
+    public static class SessionExtensions
+    {
+        private const string key = "Cart";
 
-			using var stream = new MemoryStream();
-			using var writer = new BinaryWriter(stream, Encoding.UTF8, true);
+        public static void Set(this ISession session, Cart value)
+        {
+            if (value == null)
+                return;
+            using var stream = new MemoryStream();
+            using var writer = new BinaryWriter(stream, Encoding.UTF8, true);
+            writer.Write(value.OrderId);
+            writer.Write(value.TotalCount);
+            writer.Write(value.TotalPrice);
 
-			writer.Write(value.Items.Count);
+            session.Set(key, stream.ToArray());
+        }
 
-			foreach (var item in value.Items)
-			{
-				writer.Write(item.Key);
-				writer.Write(item.Value);
-			}
+        public static bool TryGetCart(this ISession session, out Cart value)
+        {
+            if (session.TryGetValue(key, out byte[] buffer))
+            {
+                using var stream = new MemoryStream(buffer);
+                using var reader = new BinaryReader(stream, Encoding.UTF8, true);
 
-			writer.Write(value.Amount);
+                var orderId = reader.ReadInt32();
+                var totalCount = reader.ReadInt32();
+                var totalPrice = reader.ReadDecimal();
 
-			session.Set(key, stream.ToArray());
+                value = new Cart(orderId)
+                {
+                    TotalCount = totalCount,
+                    TotalPrice = totalPrice
+                };
 
-		}
-		public static bool TryGetCart(this ISession session, out Cart? value)
-		{
-			if (session.TryGetValue(key, out byte[] buffer))
-			{
-				using var stream = new MemoryStream(buffer);
-				using var reader = new BinaryReader(stream, Encoding.UTF8, true);
+                return true;
+            }
 
-				value = new Cart();
-				var lenght = reader.ReadInt32();
-
-				for (int i = 0; i < lenght; i++)
-				{
-					var bookId = reader.ReadInt32();
-					var count = reader.ReadInt32();
-					value.Items.Add(bookId, count);
-				}
-
-				value.Amount = reader.ReadDecimal();
-				return true;
-			}
-
-			value = null;
-			return false;
-		}
-	}
+            value = null;
+            return false;
+        }
+    }
 }
