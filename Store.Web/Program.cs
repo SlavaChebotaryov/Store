@@ -18,7 +18,7 @@ namespace Store.Web
 				options.Cookie.IsEssential = true; //Обозначает что кука не обязана запрашивать согласие пользователя(тех кука)
 
 			});
-
+            services.AddSingleton<IOrderRepository, OrderRepository>();
 			services.AddSingleton<IBookRepository, BookRepository>();
 			services.AddSingleton<BookService>();
 
