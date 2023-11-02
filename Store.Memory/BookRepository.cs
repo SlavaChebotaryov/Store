@@ -13,9 +13,15 @@
 
 		public Book[] GetAllByTitleOrAuthor(string query) => books
 			.Where(b => b.Title.Contains(query??"")
-			|| b.Author.Contains(query))
+			|| b.Author.Contains(query??""))
 			.ToArray();
 
 		public Book GetById(int id) => books.Single(book=>book.Id==id);
+		public Book[] GetAllByIds(IEnumerable<int> bookIds)
+		{
+			return books.Where(book => bookIds.Contains(book.Id)).ToArray();
+		}
+
+		public Book[] GetAllBook() => books;
 	}
 }
