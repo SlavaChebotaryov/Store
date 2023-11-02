@@ -21,9 +21,9 @@ namespace Store.Web.Controllers
             session.Set(key, stream.ToArray());
         }
 
-        public static bool TryGetCart(this ISession session, out Cart value)
+        public static bool TryGetCart(this ISession session, out Cart? value)
         {
-            if (session.TryGetValue(key, out byte[] buffer))
+            if (session.TryGetValue(key, out var buffer))
             {
                 using var stream = new MemoryStream(buffer);
                 using var reader = new BinaryReader(stream, Encoding.UTF8, true);
